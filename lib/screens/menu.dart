@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:football_news/widgets/left_drawer.dart';
 import 'package:football_news/widgets/news_card.dart';
+import 'package:football_news/screens/newslist_form.dart'; // ✅ Tambahkan ini agar bisa akses NewsFormPage
 
 class MyHomePage extends StatelessWidget {
-    MyHomePage({super.key});
+  MyHomePage({super.key});
 
-    final String nama = "Lionel Messi"; //nama
-    final String npm = "2406275678"; //npm
-    final String kelas = "B"; //kelas
+  final String nama = "Lionel Messi"; //nama
+  final String npm = "2406275678"; //npm
+  final String kelas = "B"; //kelas
 
-    final List<ItemHomepage> items = [
+  final List<ItemHomepage> items = [
     ItemHomepage("See Football News", Icons.newspaper),
     ItemHomepage("Add News", Icons.add),
     ItemHomepage("Logout", Icons.logout),
-    ];
+  ];
 
-    @override
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     // Scaffold menyediakan struktur dasar halaman dengan AppBar dan body.
     return Scaffold(
       // AppBar adalah bagian atas halaman yang menampilkan judul.
@@ -32,7 +33,7 @@ class MyHomePage extends StatelessWidget {
         // Warna latar belakang AppBar diambil dari skema warna tema aplikasi.
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      drawer: LeftDrawer(),
+      drawer: const LeftDrawer(),
       // Body halaman dengan padding di sekelilingnya.
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -83,7 +84,7 @@ class MyHomePage extends StatelessWidget {
 
                     // Menampilkan ItemCard untuk setiap item dalam list items.
                     children: items.map((ItemHomepage item) {
-                      return ItemCard(item);
+                      return ItemCard(item: item);
                     }).toList(),
                   ),
                 ],
@@ -96,9 +97,8 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+/// Kartu informasi yang menampilkan title dan content.
 class InfoCard extends StatelessWidget {
-  // Kartu informasi yang menampilkan title dan content.
-
   final String title;  // Judul kartu.
   final String content;  // Isi kartu.
 
@@ -129,9 +129,61 @@ class InfoCard extends StatelessWidget {
   }
 }
 
+/// Kelas model item yang ditampilkan pada homepage.
 class ItemHomepage {
   final String name;
   final IconData icon;
 
   ItemHomepage(this.name, this.icon);
+}
+
+/// Widget kartu item yang dapat ditekan di homepage.
+class ItemCard extends StatelessWidget {
+  final ItemHomepage item;
+
+  const ItemCard({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.blue[100],
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        // 👇 Area responsif terhadap sentuhan
+        onTap: () {
+          // Memunculkan SnackBar ketika diklik
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
+            );
+
+          // Navigate ke route yang sesuai (tergantung jenis tombol)
+          if (item.name == "Add News") {
+            // TODO: Gunakan Navigator.push untuk melakukan navigasi ke MaterialPageRoute yang mencakup NewsFormPage.
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const NewsFormPage()),
+            );
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(item.icon, size: 40, color: Colors.blue[900]),
+              const SizedBox(height: 8),
+              Text(
+                item.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
