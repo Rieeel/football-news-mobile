@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:football_news/widgets/left_drawer.dart';
 import 'package:football_news/widgets/news_card.dart';
-import 'package:football_news/screens/newslist_form.dart'; // ✅ Tambahkan ini agar bisa akses NewsFormPage
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -12,7 +11,7 @@ class MyHomePage extends StatelessWidget {
 
   final List<ItemHomepage> items = [
     ItemHomepage("See Football News", Icons.newspaper),
-    ItemHomepage("Add News", Icons.add),
+    ItemHomepage("Tambah Berita", Icons.add),
     ItemHomepage("Logout", Icons.logout),
   ];
 
@@ -84,7 +83,7 @@ class MyHomePage extends StatelessWidget {
 
                     // Menampilkan ItemCard untuk setiap item dalam list items.
                     children: items.map((ItemHomepage item) {
-                      return ItemCard(item: item);
+                      return ItemCard(item);
                     }).toList(),
                   ),
                 ],
@@ -135,55 +134,4 @@ class ItemHomepage {
   final IconData icon;
 
   ItemHomepage(this.name, this.icon);
-}
-
-/// Widget kartu item yang dapat ditekan di homepage.
-class ItemCard extends StatelessWidget {
-  final ItemHomepage item;
-
-  const ItemCard({super.key, required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.blue[100],
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        // 👇 Area responsif terhadap sentuhan
-        onTap: () {
-          // Memunculkan SnackBar ketika diklik
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
-            );
-
-          // Navigate ke route yang sesuai (tergantung jenis tombol)
-          if (item.name == "Add News") {
-            // TODO: Gunakan Navigator.push untuk melakukan navigasi ke MaterialPageRoute yang mencakup NewsFormPage.
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const NewsFormPage()),
-            );
-          }
-        },
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(item.icon, size: 40, color: Colors.blue[900]),
-              const SizedBox(height: 8),
-              Text(
-                item.name,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
